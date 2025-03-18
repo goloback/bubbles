@@ -19,10 +19,15 @@ class Bubbles extends StatelessWidget{
 }
 
 class MainPage extends StatefulWidget{
+  var Bg = const Color.fromARGB(255, 67, 162, 197);
+  var size = 5.0;
+
+  MainPage( { required this.Bg, required this.size});
   @override
   State<StatefulWidget> createState() {
-    return _MainPage();
+    return _MainPage(Bg: Bg, size: size);
   }
+
 }
 
 class _MainPage extends State<MainPage>{
@@ -30,6 +35,12 @@ class _MainPage extends State<MainPage>{
 //add button clear or delete all bublles, which delete all elements from allbubles and print list length
 
 List<GraficBublle> allbublles = [];
+
+var Bg = const Color.fromARGB(255, 67, 162, 197);
+var size = 5.0;
+
+
+_MainPage({required this.Bg, required this.size});
 
 void createbublle(TapDownDetails infoclick){
   var x = infoclick.localPosition.dx;
@@ -41,7 +52,7 @@ void createbublle(TapDownDetails infoclick){
     Random().nextInt(256), 
     Random().nextInt(256),
      1),
-     size: Random().nextInt(71) + 30
+     size: size
      );
      setState(() {
       allbublles.add(newbublle);
@@ -63,7 +74,7 @@ void deleteAllBubbles(){
       child: Stack(
         children: [
           Container(
-            color: const Color.fromARGB(255, 67, 162, 197),
+            color:Bg,
             width: double.infinity,
             height: double.infinity,
           ),
@@ -97,6 +108,16 @@ void deleteAllBubbles(){
               onPressed: deleteAllBubbles,
                child: Text('delete')
             )
+          ), 
+          Positioned(
+            bottom: 5,
+            right: 5,
+            child: ElevatedButton(
+              onPressed: (){
+                Navigator.pop(context);
+              },
+               child: Text('Home')
+            )
           )
         ],
       ),
@@ -123,19 +144,95 @@ class FirstPage extends StatefulWidget{
 }
 
 class _FirstPage extends State<FirstPage>{
+  var selected_color = Color.fromARGB(255, 67, 162, 197);
+  var selected_size = 5.0;
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: open_main_page,
-      child: Text('data')
-    );
+    return Scaffold(
+      body:  Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [DropdownButton<Color>(
+          value: selected_color,
+          items: [
+            DropdownMenuItem(
+              child: Text(
+                'blue', 
+                style: TextStyle(
+                  color:Color.fromARGB(255, 67, 162, 197) 
+                ),
+              ),
+              value:  Color.fromARGB(255, 67, 162, 197),
+            ),
+            DropdownMenuItem(
+              child: Text(
+                'red', 
+                style: TextStyle(
+                  color: Color.fromARGB(255, 202, 7, 7)
+                ),
+              ), 
+              value:  Color.fromARGB(255, 202, 7, 7),
+            ),
+            DropdownMenuItem(
+              child: Text(
+                'green',
+                style: TextStyle(
+                  color:  Color.fromARGB(255, 30, 202, 7)
+                ),
+              ), 
+              value:  Color.fromARGB(255, 30, 202, 7),
+            ),
+          ],
+          onChanged: (color){
+            setState(() {
+              selected_color = color!;
+            }
+            );
+            
+          }
+          ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Slider(
+              value: selected_size,
+              min: 5,
+              max: 100,
+             onChanged: (size){
+              setState(() {
+                selected_size = size;
+              });
+              
+             })
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: open_main_page,
+              child: Text('data')
+            )
+          ],
+        )
+        
+      ],
+  
+
+    ),
+    )
+    ;
   }
 
   void open_main_page(){
     Navigator.push(
       context, 
       MaterialPageRoute(
-        builder: (context)=>MainPage()
+        builder: (context)=>MainPage(Bg: selected_color, size: selected_size,)
       )
     );
   }
